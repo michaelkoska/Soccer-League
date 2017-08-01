@@ -1,0 +1,30 @@
+<% include partials/header %>
+
+<div class="signup">
+	<h2>Sign Up</h2>
+	<form action="/player" method="POST">
+		<div>
+			<span class="form-label">First Name:</span>
+			<input type="text" name="player[firstName]" placeholder="First Name">
+		</div>
+		<div>
+			<span class="form-label">LastName:</span>
+			<input type="text" name="player[lastName]" placeholder="Last Name">
+		</div>
+		<div>
+			<span class="form-label">email:</span>
+			<input type="text" name="player[user]" placeholder="Email">
+		</div>
+		<div>
+			<span class="form-label">password:</span>
+			<input type="password" name="player[password]" placeholder="Password">
+		</div>
+				<div>
+			<span class="form-label">phone:</span>
+			<input type="text" name="player[phone]" placeholder="Phone Number">
+		</div>
+		<button id="register">Submit</button>
+	</form>
+</div>
+
+<% include partials/footer %>

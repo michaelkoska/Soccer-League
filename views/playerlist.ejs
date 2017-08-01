@@ -1,0 +1,11 @@
+<% include partials/header %>
+
+<% allPlayers.forEach(function(player){ %>
+	<p>
+		<%= player.firstName %> <%= player.lastName %>
+	</p>
+
+<% }); %>
+
+
+<% include partials/footer %>

@@ -1,0 +1,172 @@
+body, html {
+	padding: 0;
+	margin: 0;
+	height: 100%;
+}
+/*all nav content is in header.ejs*/
+#navbar{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+	overflow: hidden;
+	width: 100%;
+	background-color: #1B1E26;
+}
+
+.navContent li a {
+	display: inline-block;
+	color: #F2EFBD;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	transition: 0.3s;
+	font-size: 17px;
+	float: left;
+	text-transform: uppercase;
+	font-family: Roboto;
+}
+
+#navright li a {
+	float: right;
+	display: inline-block;
+}
+
+.navContent li a:hover {
+	background-color: #ccc;
+}
+
+/*cover is in home.ejs*/
+#cover {
+	background: url("../images/cover.jpg");
+	background-size: cover;
+	height: 100%;
+}
+
+h1 {
+	text-align: center;
+	font-size: 60px;
+	font-weight: 700;
+	text-transform: uppercase;
+	color: #F2EFBD;
+	clear: both;
+	padding-top: 180px;
+	margin: 0;
+	font-family: Roboto;
+	letter-spacing: 0.2em;
+}
+
+h1 span {
+	display: inline-block;
+	padding: 0.2em 0.5em;
+	border: solid 10px #F2EFBD;
+}
+
+#cover div {
+	text-align: center;
+	padding: 40px 0;
+}
+
+/*signin button is in home.ejs*/
+#signin {
+	background-color: #CCC; 
+	height: 50px;
+	width: 125px;
+	border-radius: 10px;
+	margin: 0 auto;
+	font-family: Roboto;
+	font-size: 24px;
+	color: #1B1E26;
+	border: 2px solid #333;
+	box-shadow: -2px 2px 8px #363636;
+	text-transform: uppercase;
+}
+
+#signin:hover {
+	background-color: #2F6D7A;
+}
+
+#signin:active, #signin:focus {
+	background-color: #0E4C59;
+	outline: none;
+}
+
+.signup {
+	display: block;
+	text-align: center;
+	width: 30%;
+	min-width: 200px;
+	margin: 75px auto;
+	padding: 25px 20px 30px 20px;
+	border: 1px solid black;
+	border-radius: 5px;
+}
+
+form {
+	display: inline-block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+input {
+	display: block;
+	margin: 0 0 15px 0;
+	width: 100%;
+	padding-top: 8px;
+	font-family: Roboto;
+	font-size: 18px;
+	border-radius: 5px;
+}
+
+.form-label {
+	text-align: left;
+	float: left;
+	font-family: Roboto;
+	font-size: 16px;
+	padding-bottom: 5px;
+	text-transform: uppercase;
+}
+
+h2, h3, h4 {
+	font-family: Roboto;
+	text-transform: uppercase;
+}
+
+h5 {
+	font-family: Roboto;
+	font-size: 14px;
+}
+
+p {
+	font-family: Georgia, serif;
+}
+
+/*Refactor register and signin button*/
+#register {
+	background-color: #CCC; 
+	height: 20px;
+	width: 75px;
+	border-radius: 5px;
+	margin: 0 auto;
+	font-family: Roboto;
+	font-size: 12px;
+	color: #1B1E26;
+	border: 1px solid #333;
+	box-shadow: -0.5px 0.5px 1px #363636;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+#register:hover {
+	background-color: #2F6D7A;
+}
+
+#register:active, #register:focus {
+	background-color: #0E4C59;
+	outline: none;
+}
+
+#rules {
+	padding: 20px 40px;
+}
+
+

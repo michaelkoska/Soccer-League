@@ -1,0 +1,13 @@
+<% include partials/header %>
+
+<% allTeams.forEach(function(team){ %>
+	<p>
+		<strong> Team: </strong> <%= team.name %> 
+		<strong> Captain: </strong> <%= team.captain %>
+	</p>
+	<p><a href="/team/<%= team._id %>"><button>View Roster</button></a></p>
+
+<% }); %>
+
+<% include partials/footer %>
+

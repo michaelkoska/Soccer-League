@@ -1,8 +1,17 @@
 var express = require("express");
 var app = express();
+var passport = require("passport");
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
-var Player = require("./models/newPlayer");
+mongoose.Promise = global.Promise;
+var User = require("./models/newPlayer");
+var Team = require("./models/newTeam");
+var LocalStrategy = require("passport-local");
+var passportLocalMongoose = require("passport-local-mongoose");
+
+//method override
+
+
 
 mongoose.connect("mongodb://localhost/league");
 app.use(bodyParser.urlencoded({extended: true}));
@@ -10,6 +19,16 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.set("port", process.env.PORT || 3000);
 
+app.use(require("express-session")({
+	secret: "Generic Secret Password",
+	resave: false,
+	saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //landing page
 app.get("/", function(req, res){
@@ -18,24 +37,34 @@ app.get("/", function(req, res){
 
 //Individual Player Page
 app.get("/player", function(req, res){
-	Player.find({}, function(err, allPlayers){
+	User.find({}, function(err, allUsers){
 		if(err){
 			console.log(err);
 		} else {
-			res.render("player", {player: allPlayers});
+			res.render("player", {user: allUsers});
 		}
 	});
 });
 
 //Player Create Page from /player/new
 app.post("/player", function(req, res){
-	Player.create(req.body.player, function(err, newPlayer){
+	var newUser = new User({ username: req.body.user.username });
+	User.register(newUser, req.body.user.password, function(err, user){
+		if(err){
+			console.log(err);
+			return res.render("new");
+		} 
+		passport.authenticate("local")(req, res, function(){
+			res.redirect("/player");
+		});
+	});
+/*	User.create(req.body.user, function(err, newUser){
 		if(err){
 			console.log(err);
 		} else {
-			res.redirect("/player")
+			res.redirect("/player");
 		}
-	});
+	});*/
 });
 
 //Player Signup
@@ -44,19 +73,31 @@ app.get("/player/new", function(req, res){
 });
 
 //Show Teams page------------NEEDS PAGE
-app.get("/teamslist", function(req, res){
-	res.render("teamslist");
-});
-
-//Show single team roster--------------NEEDS PAGE
-app.get("/team/:id", function(req, res){
-	res.render("teampage");
+app.get("/team/list", function(req, res){
+	Team.find().sort({ team: 1 }).exec(function(err, allTeams){
+		if(err){
+			console.log(err);
+		} else {
+			res.render("teamlist", { allTeams: allTeams } );
+		}
+	});
 });
 
 //Team signup page------------NEEDS PAGE
 app.get("/team/new", function(req, res){
-	res.render("teamRegister")
-})
+	res.render("teamRegister");
+});
+
+//Show single team roster--------------NEEDS PAGE
+app.get("/team/:id", function(req, res){
+	Team.findById(req.params.id, function(err, foundTeam){
+		if(err){
+			console.log(err);
+		} else {
+			res.render("teampage", { team: foundTeam } );
+		}
+	});
+});
 
 //Create Team---------NEEDS PAGE
 app.post("/team", function(req, res){
@@ -64,7 +105,7 @@ app.post("/team", function(req, res){
 		if(err){
 			console.log(err);
 		} else {
-			res.redirect("/team/id")
+			res.redirect("/team/list");
 		}
 	});
 });
@@ -72,13 +113,25 @@ app.post("/team", function(req, res){
 
 //List all Players
 app.get("/playerlist", function(req,res){
-	Player.find().sort({ lastName: 1 }).exec(function(err, allPlayers){
+	User.find().sort({ lastName: 1 }).exec(function(err, allUsers){
 		if(err){
 			console.log(err);
 		} else {
-			res.render("playerlist", { allPlayers: allPlayers } );
+			res.render("playerlist", { allUsers: allUsers } );
 		}
 	});
+});
+
+//LOGIN ROUTES
+app.get("/login", function(req, res){
+	res.render("login");
+});
+
+app.post("/login", passport.authenticate("local", {
+	successRedirect: "/player",
+	failureRedirect: "/login"
+}), function(req, res){
+
 });
 
 //Rules

@@ -1,0 +1,23 @@
+<% include partials/header %>
+
+<div class="signup">
+	<h2>Sign Up</h2>
+	<form action="/team" method="POST">
+		<div>
+			<span class="form-label">Team Name:</span>
+			<input type="text" name="team[name]" placeholder="Team Name">
+		</div>
+		<div>
+			<span class="form-label">Season:</span>
+			<input type="text" name="team[season]" placeholder="Email">
+		</div>
+		<div>
+			<span class="form-label">Captain:</span>
+			<input type="text" name="team[captain]" placeholder="First Name and Last Name">
+		</div>
+		<button class="register">Submit</button>
+	</form>
+</div>
+
+
+<% include partials/footer %>

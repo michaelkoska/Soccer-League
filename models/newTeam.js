@@ -3,9 +3,12 @@ var mongoose = require("mongoose");
 var teamSchema = new mongoose.Schema({
 	name: String,
 	season: String,
+	captain: String,
 	roster: [
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "Player"
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User"
+		}
 	]
 });
 

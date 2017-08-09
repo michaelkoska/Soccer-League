@@ -141,7 +141,7 @@ p {
 }
 
 /*Refactor register and signin button*/
-#register {
+.register {
 	background-color: #CCC; 
 	height: 20px;
 	width: 75px;
@@ -156,11 +156,11 @@ p {
 	text-align: center;
 }
 
-#register:hover {
+.register:hover {
 	background-color: #2F6D7A;
 }
 
-#register:active, #register:focus {
+.register:active, .register:focus {
 	background-color: #0E4C59;
 	outline: none;
 }

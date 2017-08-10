@@ -48,23 +48,21 @@ app.get("/player", function(req, res){
 
 //Player Create Page from /player/new
 app.post("/player", function(req, res){
-	var newUser = new User({ username: req.body.user.username });
-	User.register(newUser, req.body.user.password, function(err, user){
+	var newUser = new User({ 
+		username: req.body.username,
+		firstName: req.body.user.firstName,
+		lastName: req.body.user.lastName,
+		phone: req.body.user.phone
+		});
+	User.register(newUser, req.body.password, function(err, user){
 		if(err){
 			console.log(err);
 			return res.render("new");
 		} 
 		passport.authenticate("local")(req, res, function(){
-			res.redirect("/player");
+			res.redirect("/");
 		});
 	});
-/*	User.create(req.body.user, function(err, newUser){
-		if(err){
-			console.log(err);
-		} else {
-			res.redirect("/player");
-		}
-	});*/
 });
 
 //Player Signup

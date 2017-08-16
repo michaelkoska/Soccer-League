@@ -1,6 +1,34 @@
 <% include partials/header %>
 
-<p><%=user%></p>
+<p>
+	<%=user%>
+	<div>
+		<%= user.username %>
+	</div>
+	<div>
+		<%= user.firstName %> <%= user.lastName %>
+	</div>
+	<div>
+		Free Agent: 
+		<% if(user.freeAgent) { %>
+			Yes
+		<% } else { %>
+			No
+		<% } %>
+	</div>
+	<div>
+		Captain:
+		<% if(user.captain) { %>
+			Yes
+		<% } else { %>
+			No
+		<% } %>
+	</div>
 
-
+</p>
+	<% if(currentUser){ %>
+	<div>
+		<a href="/player/<%= currentUser._id %>/edit"><button>Edit Profile</button></a>
+	</div>
+	<% } %>
 <% include partials/footer %>

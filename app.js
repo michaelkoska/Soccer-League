@@ -8,6 +8,7 @@ var User = require("./models/newPlayer");
 var Team = require("./models/newTeam");
 var LocalStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
+var methodOverride = require("method-override");
 
 //method override
 
@@ -18,6 +19,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.set("port", process.env.PORT || 3000);
+app.use(methodOverride("_method"));
 
 app.use(require("express-session")({
 	secret: "Generic Secret Password",
@@ -30,18 +32,23 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+//passs
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
+});
+
 //landing page
 app.get("/", function(req, res){
 	res.render("home");
 });
 
-//Individual Player Page
-app.get("/player", function(req, res){
-	User.find({}, function(err, allUsers){
+app.get("/player", function(req,res){
+	User.find().sort({ lastName: 1 }).exec(function(err, allUsers){
 		if(err){
 			console.log(err);
 		} else {
-			res.render("player", {user: allUsers});
+			res.render("playerlist", { allUsers: allUsers } );
 		}
 	});
 });
@@ -50,9 +57,9 @@ app.get("/player", function(req, res){
 app.post("/player", function(req, res){
 	var newUser = new User({ 
 		username: req.body.username,
-		firstName: req.body.user.firstName,
-		lastName: req.body.user.lastName,
-		phone: req.body.user.phone
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		phone: req.body.phone
 		});
 	User.register(newUser, req.body.password, function(err, user){
 		if(err){
@@ -60,7 +67,7 @@ app.post("/player", function(req, res){
 			return res.render("new");
 		} 
 		passport.authenticate("local")(req, res, function(){
-			res.redirect("/");
+			res.redirect("/player/"+ currentUser._id);
 		});
 	});
 });
@@ -70,7 +77,45 @@ app.get("/player/new", function(req, res){
 	res.render("new");
 });
 
-//Show Teams page------------NEEDS PAGE
+//Individual Player Page
+app.get("/player/:id", function(req, res){
+	User.findById(req.params.id, function(err, user){
+		if(err){
+			console.log(err);
+		} else {
+			res.render("player", {user: user});
+		}
+	});
+});
+
+app.get("/player/:id/edit", function(req, res){
+	User.findById(req.params.id, function(err, foundUser){
+		if(err){
+			res.redirect("/player");
+		} else {
+			res.render("editplayer", { user: foundUser });
+		}
+	});
+});
+
+app.put("/player/:id", function(req, res){
+	const newUser = {
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		phone: req.body.phone,
+		freeAgent: req.body.freeAgent,
+		captain: req.body.captain
+	}
+	User.findByIdAndUpdate(req.params.id, newUser, function(err, updateUser){
+		if(err){
+			res.redirect("/player");
+		} else {
+			res.redirect("/player/" + req.params.id);
+		}
+	});
+});
+
+//Show Teams page
 app.get("/team/list", function(req, res){
 	Team.find().sort({ team: 1 }).exec(function(err, allTeams){
 		if(err){
@@ -81,8 +126,8 @@ app.get("/team/list", function(req, res){
 	});
 });
 
-//Team signup page------------NEEDS PAGE
-app.get("/team/new", function(req, res){
+//Team signup page
+app.get("/team/new", isLoggedIn, function(req, res){
 	res.render("teamRegister");
 });
 
@@ -97,7 +142,7 @@ app.get("/team/:id", function(req, res){
 	});
 });
 
-//Create Team---------NEEDS PAGE
+//Create Team
 app.post("/team", function(req, res){
 	Team.create(req.body.team, function(err, newTeam){
 		if(err){
@@ -109,27 +154,21 @@ app.post("/team", function(req, res){
 });
 
 
-//List all Players
-app.get("/playerlist", function(req,res){
-	User.find().sort({ lastName: 1 }).exec(function(err, allUsers){
-		if(err){
-			console.log(err);
-		} else {
-			res.render("playerlist", { allUsers: allUsers } );
-		}
-	});
-});
-
 //LOGIN ROUTES
 app.get("/login", function(req, res){
 	res.render("login");
 });
 
 app.post("/login", passport.authenticate("local", {
-	successRedirect: "/player",
 	failureRedirect: "/login"
 }), function(req, res){
+	res.redirect("player/" + req.user._id);
+});
 
+//Logout Route
+app.get("/logout", function(req, res){
+	req.logout();
+	res.redirect("/");
 });
 
 //Rules
@@ -141,6 +180,8 @@ app.get("/rules", function(req, res){
 app.get("/schedule", function(req, res){
 	res.render("schedule");
 });
+
+
 
 //Error handling pages
 app.use(function(req, res, next){
@@ -157,3 +198,16 @@ app.use(function(err, req, res, next){
 app.listen(app.get("port"), function(){
 	console.log("Server is running on " + app.get("port"));
 });
+
+
+
+
+//middleware
+
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+}
+

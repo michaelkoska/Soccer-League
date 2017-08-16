@@ -1,8 +1,9 @@
 <% include partials/header %>
 
-<% allUsers.forEach(function(player){ %>
+<% allUsers.forEach(function(user){ %>
 	<p>
-		<%= user.firstName %> <%= user.lastName %>
+		<%= user.firstName %> <%= user.lastName %> 
+		<a href="/player/<%= user._id %>"><button>View Player</button></a><%= user._id %>
 	</p>
 
 <% }); %>

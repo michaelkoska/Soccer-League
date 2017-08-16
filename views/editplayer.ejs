@@ -1,0 +1,33 @@
+<% include partials/header %>
+
+<div class="signup">
+	<h2>Edit Profile</h2>
+	<form action="/player/<%= user._id %>/?_method=PUT" method="POST">
+		<div>
+			<span class="form-label">First Name:</span>
+			<input type="text" name="firstName" value="<%= user.firstName %>" >
+		</div>
+		<div>
+			<span class="form-label">Last Name:</span>
+			<input type="text" name="lastName" value="<%= user.lastName %>">
+		</div>
+		<div>
+			<span class="form-label">phone:</span>
+			<input type="text" name="phone" value="<%= user.phone %>">
+		</div>
+		<div>
+			<span class="form-label">Free Agent:</span>
+			<input type="radio" name="freeAgent" value="true">Yes, I want to be a free agent!<br>
+			<input type="radio" name="freeAgent" value="false">No, I've signed a deal for big money!
+		</div>
+		<div>
+			<span class="form-label">Captain:</span>
+			<input type="radio" name="captain" value="true">I will be captain!<br>
+			<input type="radio" name="captain" value="false">I have no leadership skills!
+		</div>
+		<button class="register">Submit</button>
+	</form>
+</div>
+
+
+<% include partials/footer %>

@@ -10,14 +10,13 @@ var LocalStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 var methodOverride = require("method-override");
 
-//method override
-
 
 
 mongoose.connect("mongodb://localhost/league");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
+//app.use("/scripts", express.static(__dirname + "assets"));
 app.set("port", process.env.PORT || 3000);
 app.use(methodOverride("_method"));
 
@@ -32,7 +31,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-//passs
+//passing user to each request
 app.use(function(req, res, next){
 	res.locals.currentUser = req.user;
 	next();
@@ -43,6 +42,7 @@ app.get("/", function(req, res){
 	res.render("home");
 });
 
+//finds all players and lists them alphabetically
 app.get("/player", function(req,res){
 	User.find().sort({ lastName: 1 }).exec(function(err, allUsers){
 		if(err){
@@ -88,6 +88,7 @@ app.get("/player/:id", function(req, res){
 	});
 });
 
+//find user by id and allow user to edit
 app.get("/player/:id/edit", function(req, res){
 	User.findById(req.params.id, function(err, foundUser){
 		if(err){
@@ -98,6 +99,7 @@ app.get("/player/:id/edit", function(req, res){
 	});
 });
 
+//sends request to update user
 app.put("/player/:id", function(req, res){
 	const newUser = {
 		firstName: req.body.firstName,
@@ -159,6 +161,7 @@ app.get("/login", function(req, res){
 	res.render("login");
 });
 
+//logs user in
 app.post("/login", passport.authenticate("local", {
 	failureRedirect: "/login"
 }), function(req, res){

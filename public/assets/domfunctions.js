@@ -9,3 +9,6 @@ function agentUpdate(input){
 		document.getElementById("leader").checked = true;
 	}
 }
+
+//create function
+//if player is on team, cannot be freeAgent

@@ -9,6 +9,7 @@ var Team = require("./models/newTeam");
 var LocalStrategy = require("passport-local");
 var passportLocalMongoose = require("passport-local-mongoose");
 var methodOverride = require("method-override");
+var ObjectID = require("mongodb").ObjectID;
 
 
 
@@ -16,7 +17,6 @@ mongoose.connect("mongodb://localhost/league");
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
-//app.use("/scripts", express.static(__dirname + "assets"));
 app.set("port", process.env.PORT || 3000);
 app.use(methodOverride("_method"));
 
@@ -67,7 +67,7 @@ app.post("/player", function(req, res){
 			return res.render("new");
 		} 
 		passport.authenticate("local")(req, res, function(){
-			res.redirect("/player/"+ currentUser._id);
+			res.redirect("/player");
 		});
 	});
 });
@@ -119,7 +119,9 @@ app.put("/player/:id", function(req, res){
 
 //Show Teams page
 app.get("/team/list", function(req, res){
-	Team.find().sort({ team: 1 }).exec(function(err, allTeams){
+	Team.find().sort({ team: 1 })
+	.populate("captainId")
+	.exec(function(err, allTeams){
 		if(err){
 			console.log(err);
 		} else {
@@ -146,10 +148,19 @@ app.get("/team/:id", function(req, res){
 
 //Create Team
 app.post("/team", function(req, res){
+	User.findById(ObjectID(res.locals.currentUser._id), function(err, user){
+		user.captain = true;
+		user.freeAgent = false;
+		user.save();
+	});
 	Team.create(req.body.team, function(err, newTeam){
+		newTeam.captainId = res.locals.currentUser._id;
+		newTeam.save();
 		if(err){
 			console.log(err);
 		} else {
+			//User.update({ _id: new ObjectID(res.locals.currentUser._id) }, { $set: { captain: true } });
+
 			res.redirect("/team/list");
 		}
 	});
@@ -212,5 +223,11 @@ function isLoggedIn(req, res, next){
 		return next();
 	}
 	res.redirect("/login");
+}
+
+function isValidUser(req, res, next){
+	if(currentUser){
+
+	}
 }
 

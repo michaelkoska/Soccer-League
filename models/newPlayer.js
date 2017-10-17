@@ -14,7 +14,13 @@ var userSchema = new mongoose.Schema({
 	captain: {
 		type: Boolean,
 		default: false
-	}
+	},
+	hasInvite: [
+		{
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "Teams"
+		}
+	]
 });
 
 userSchema.plugin(passportLocalMongoose);

@@ -3,7 +3,7 @@
 <% allTeams.forEach(function(team){ %>
 	<p>
 		<strong> Team: </strong> <%= team.name %> 
-		<strong> Captain: </strong> <%= team.captain %>
+		<strong> Captain: </strong> <%= team.captainId.username %>
 	</p>
 	<p><a href="/team/<%= team._id %>"><button>View Roster</button></a></p>
 

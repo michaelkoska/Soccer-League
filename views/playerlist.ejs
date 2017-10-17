@@ -3,7 +3,14 @@
 <% allUsers.forEach(function(user){ %>
 	<p>
 		<%= user.firstName %> <%= user.lastName %> 
-		<a href="/player/<%= user._id %>"><button>View Player</button></a><!-- <%= user._id %> -->
+		<a href="/player/<%= user._id %>"><button>View Player</button></a>
+		<% if(user.captain){ %>
+			<strong>Captain</strong>
+
+		<% } %>
+		<% if(user.freeAgent){ %>
+			Free Agent
+		<% } %>
 	</p>
 
 <% }); %>
